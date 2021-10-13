@@ -1,5 +1,5 @@
 import { initializeFirebase, FirebaseCollection } from "./utils/firebase-utils";
-import { Cat } from "../core/types";
+import { Cat, CATS_COLLECTION_NAME } from "../core/StoreTypes";
 
 initializeFirebase({
   apiKey: "",
@@ -13,4 +13,4 @@ initializeFirebase({
 
 // Add your stores here
 export type { Cat };
-export const CatStore = new FirebaseCollection<Cat>("cats");
+export const CatStore = new FirebaseCollection<Cat>(CATS_COLLECTION_NAME);
