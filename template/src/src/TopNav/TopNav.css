@@ -1,0 +1,5 @@
+.navbar-moz {
+  /* From https://www.mozilla.org */
+  box-shadow: 0 0 1px 1px rgba(29, 17, 51, 0.04),
+    0 0 3px 2px rgba(9, 32, 77, 0.12), 0 0 2px -3px rgba(29, 17, 51, 0.12);
+}
