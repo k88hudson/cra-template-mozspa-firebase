@@ -15,8 +15,9 @@ export function TopNav({ links }: TopNavProps) {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            {links.map(({ label, ...linkProps }) => (
+            {links.map(({ label, ...linkProps }, i) => (
               <NavLink
+                key={label + i}
                 className="nav-link"
                 activeClassName="active"
                 {...linkProps}

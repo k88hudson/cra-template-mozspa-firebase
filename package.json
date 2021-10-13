@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "sample": "npx create-react-app sample__ --template file:. --use-npm",
-    "backport": "cp -R sample__/src template/src"
+    "backport": "cp -R sample__/src template && cp -R sample__/core template"
   },
   "description": "The base TypeScript template for Create React App.",
   "repository": {

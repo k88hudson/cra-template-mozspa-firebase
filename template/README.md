@@ -2,7 +2,24 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Special setup
+
+### Configure Firebase
+
+1. Go to https://console.firebase.google.com/
+2. Create a new project.
+3. Click "Add Firebase to your web app"
+4. Give the app a unique name
+5. Copy the app config and paste it into src/firebase.ts
+6. Go to "Firestore Database" and create a new DB. Feel free to start with test permissions, but make sure you update this later.
+7. Run the app with "npm start".
+8. Navigate to #/about, start adding data. A collection will be created called "cats".
+
+## Deploying to gh-pages
+
+You can deploy this application to gh-pages by running `npm run deploy`. This will push to a `gh-pages` branch on Github.
+
+## Available CRA Scripts
 
 In the project directory, you can run:
 
