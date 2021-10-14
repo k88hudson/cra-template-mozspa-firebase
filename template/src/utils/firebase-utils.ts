@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
-import { getApp, initializeApp, FirebaseApp } from "firebase/app";
+import { initializeApp, FirebaseApp } from "firebase/app";
 import {
   getFirestore,
   collection,
@@ -11,14 +11,23 @@ import {
   addDoc,
   setDoc,
   deleteDoc,
+  QueryConstraint,
 } from "firebase/firestore";
-
-import "firebase/firestore";
-import "firebase/auth";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  getAuth,
+  signOut as firebaseSignOut,
+  Auth,
+  onAuthStateChanged,
+  User,
+} from "firebase/auth";
 import { useState, useEffect } from "react";
 
 export let app: FirebaseApp;
 export let db: Firestore;
+export let auth: Auth;
+export let googleProvider: GoogleAuthProvider;
 
 /**
  * Initializes Firestore. Has to be called first before anything else can be used.
@@ -28,6 +37,31 @@ export function initializeFirebase(
 ) {
   app = initializeApp(config);
   db = getFirestore();
+  auth = getAuth();
+  googleProvider = new GoogleAuthProvider();
+}
+
+/**
+ * Sign in to the app
+ */
+export function signIn() {
+  return signInWithPopup(auth, googleProvider).catch((error) => {
+    console.log(error);
+  });
+}
+
+export function signOut() {
+  return firebaseSignOut(auth);
+}
+
+export function useAuth() {
+  const [uid, setUser] = useState<User | null>(null);
+  useEffect(() => {
+    return onAuthStateChanged(auth, (user) => {
+      setUser(user || null);
+    });
+  }, []);
+  return uid;
 }
 
 /**
@@ -46,18 +80,22 @@ export class FirebaseCollection<T> {
     return collection(this.db, this.tableId);
   }
 
-  useQuery() {
+  useQuery(key?: string, ...queryParams: QueryConstraint[]) {
     const [data, setData] = useState<Array<T & { id: string }>>([]);
     useEffect(() => {
-      const q = query(this.collection());
-      return onSnapshot(q, (snapshot) => {
-        const newData: Array<T & { id: string }> = [];
-        snapshot.forEach((doc) => {
-          newData.push({ id: doc.id, ...(doc.data() as T) });
+      if (key) {
+        const q = query(this.collection(), ...queryParams);
+        return onSnapshot(q, (snapshot) => {
+          const newData: Array<T & { id: string }> = [];
+          snapshot.forEach((doc) => {
+            newData.push({ id: doc.id, ...(doc.data() as T) });
+          });
+          setData(newData);
         });
-        setData(newData);
-      });
-    }, []);
+      }
+      // Note: we're relying on a manually set key to invalidate the cache.
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [key]);
     return { data };
   }
 
