@@ -80,22 +80,32 @@ export class FirebaseCollection<T> {
     return collection(this.db, this.tableId);
   }
 
-  useQuery(key?: string, ...queryParams: QueryConstraint[]) {
+  useQuery(
+    invalidate: any[],
+    {
+      skipIf,
+      query: queryParams = [],
+    }: { skipIf?: boolean; query?: QueryConstraint[] }
+  ) {
     const [data, setData] = useState<Array<T & { id: string }>>([]);
     useEffect(() => {
-      if (key) {
-        const q = query(this.collection(), ...queryParams);
-        return onSnapshot(q, (snapshot) => {
-          const newData: Array<T & { id: string }> = [];
-          snapshot.forEach((doc) => {
-            newData.push({ id: doc.id, ...(doc.data() as T) });
-          });
-          setData(newData);
-        });
+      // If the key param becomes undefined, clear the data.
+      if (skipIf) {
+        setData([]);
+        return;
       }
+      const q = query(this.collection(), ...queryParams);
+      return onSnapshot(q, (snapshot) => {
+        const newData: Array<T & { id: string }> = [];
+        snapshot.forEach((doc) => {
+          newData.push({ id: doc.id, ...(doc.data() as T) });
+        });
+        setData(newData);
+      });
+
       // Note: we're relying on a manually set key to invalidate the cache.
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [key]);
+    }, invalidate);
     return { data };
   }
 

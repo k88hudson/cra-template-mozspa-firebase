@@ -15,7 +15,10 @@ import { where } from "@firebase/firestore";
 
 export function About() {
   const { uid } = useAuth() || {};
-  const { data } = CatStore.useQuery(uid, where("uid", "==", uid));
+  const { data } = CatStore.useQuery([uid], {
+    skipIf: !uid,
+    query: [where("uid", "==", uid)],
+  });
   return (
     <Container>
       <h1 className="mb-4">About</h1>

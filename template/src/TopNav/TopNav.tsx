@@ -4,30 +4,15 @@ import { Container, Navbar, Nav, Button } from "react-bootstrap";
 import { NavLink, NavLinkProps } from "react-router-dom";
 import { signIn, signOut, useAuth } from "../utils/firebase-utils";
 
-interface TopNavProps {
-  links: Array<NavLinkProps & { label: string }>;
-}
-
-export function TopNav({ links }: TopNavProps) {
+export function TopNav({ children }: { children: React.ReactNodeArray }) {
   const user = useAuth();
   return (
     <Navbar className="navbar-moz" expand="lg">
       <Container>
-        <Navbar.Brand>Mozilla SPA</Navbar.Brand>
+        <Navbar.Brand>Mozilla ADRs</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            {links.map(({ label, ...linkProps }, i) => (
-              <NavLink
-                key={label + i}
-                className="nav-link"
-                activeClassName="active"
-                {...linkProps}
-              >
-                {label}
-              </NavLink>
-            ))}
-          </Nav>
+          <Nav className="me-auto">{children}</Nav>
         </Navbar.Collapse>
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text>
@@ -46,4 +31,8 @@ export function TopNav({ links }: TopNavProps) {
       </Container>
     </Navbar>
   );
+}
+
+export function TopNavLink(props: NavLinkProps) {
+  return <NavLink className="nav-link" activeClassName="active" {...props} />;
 }
