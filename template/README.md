@@ -15,9 +15,29 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 7. Run the app with "npm start".
 8. Navigate to #/about, start adding data. A collection will be created called "cats".
 
-## Deploying to gh-pages
+### Rules
+
+1. Install `firestore` cli
+2. Edit your local firestore.rules file
+3. `firebase deploy --only firestore:rules` to deploy
+
+### Cloud functions
+
+1. `firebase init functions`
+2. Change the target to node 14, it's node 8 by default
+3. `firebase deploy --only functions` to deploy
+
+### Deploy front-end
+
+#### With gh-pages
 
 You can deploy this application to gh-pages by running `npm run deploy`. This will push to a `gh-pages` branch on Github.
+
+#### With Firebase
+
+1. Change `HashRouter` to `BrowserRouter` in Routes.tsx, since you can use real routing
+2. `firebase init hosting`. Set the public directory to `build`
+3. Change the `npm deploy` script to `npm run build && firebase deploy --only hosting`
 
 ## Available CRA Scripts
 
